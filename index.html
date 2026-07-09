@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>의정부성모병원 연구부</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">의정부성모병원 연구부</p>
+        <h1>연구지원과 협업을 한눈에</h1>
+        <p>
+          공지사항, 캘린더, 업적, 장비, MSDS와 문의까지 연구부 운영에 필요한
+          정보를 한 페이지에서 확인할 수 있습니다.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel" id="notices">
+        <div class="panel__title-row">
+          <h2>공지사항</h2>
+          <a href="#">전체보기</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>15</td>
+              <td>연구윤리 교육</td>
+              <td>2026-07-01</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td>연구과제 공모</td>
+              <td>2026-06-20</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td>연구비 안내</td>
+              <td>2026-06-12</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel panel--split" id="calendar">
+        <div>
+          <div class="panel__title-row">
+            <h2>과제 캘린더</h2>
+          </div>
+          <div class="calendar">
+            <div class="calendar__header">July 2026</div>
+            <div class="calendar__weekdays">
+              <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+            </div>
+            <div class="calendar__days" id="calendarDays"></div>
+          </div>
+        </div>
+        <aside class="calendar__details" id="calendarDetails">
+          <h3>선택된 일정</h3>
+          <p class="calendar__empty">날짜를 선택하면 일정을 확인할 수 있습니다.</p>
+        </aside>
+      </section>
+
+      <section class="panel" id="achievements">
+        <div class="panel__title-row">
+          <h2>연구업적</h2>
+        </div>
+        <div class="cards cards--three">
+          <article class="card">
+            <h3>SCI 논문</h3>
+            <p>Nature</p>
+            <p>2026</p>
+          </article>
+          <article class="card">
+            <h3>연구 논문</h3>
+            <p>Cancer Research</p>
+            <p>2025</p>
+          </article>
+          <article class="card">
+            <h3>연구 논문</h3>
+            <p>Cell</p>
+            <p>2024</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="patents">
+        <div class="panel__title-row">
+          <h2>특허</h2>
+        </div>
+        <div class="patent">
+          <p><strong>등록번호</strong><br />KR2026-000123</p>
+          <p><strong>발명자</strong><br />김연구, 박의사</p>
+          <p><strong>상태</strong><br />등록 완료</p>
+          <a class="button" href="#">PDF 다운로드</a>
+        </div>
+      </section>
+
+      <section class="panel" id="equipment">
+        <div class="panel__title-row">
+          <h2>연구장비</h2>
+        </div>
+        <div class="cards cards--three">
+          <article class="card card--image">
+            <h3>Confocal Microscope</h3>
+            <p>사진</p>
+            <a class="button" href="#">예약하기</a>
+            <a class="button button--secondary" href="#">매뉴얼</a>
+            <p class="card__meta">담당자: 박민수</p>
+          </article>
+          <article class="card card--image">
+            <h3>Cell Analyzer</h3>
+            <p>사진</p>
+            <a class="button" href="#">예약하기</a>
+            <a class="button button--secondary" href="#">매뉴얼</a>
+            <p class="card__meta">담당자: 정하은</p>
+          </article>
+          <article class="card card--image">
+            <h3>Incubator</h3>
+            <p>사진</p>
+            <a class="button" href="#">예약하기</a>
+            <a class="button button--secondary" href="#">매뉴얼</a>
+            <p class="card__meta">담당자: 최동현</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="msds">
+        <div class="panel__title-row">
+          <h2>MSDS</h2>
+        </div>
+        <div class="msds">
+          <label class="search-box" for="msdsSearch">
+            <span>검색</span>
+            <input id="msdsSearch" type="text" placeholder="물질명을 입력하세요" />
+          </label>
+          <div class="msds__list">
+            <button class="chip">PLA</button>
+            <button class="chip">ABS</button>
+            <button class="chip">IPA</button>
+            <button class="chip">Ethanol</button>
+          </div>
+          <a class="button" href="#">PDF 다운로드</a>
+        </div>
+      </section>
+
+      <section class="panel" id="contact">
+        <div class="panel__title-row">
+          <h2>문의</h2>
+        </div>
+        <form class="contact-form">
+          <label>
+            이름
+            <input type="text" placeholder="홍길동" />
+          </label>
+          <label>
+            이메일
+            <input type="email" placeholder="example@hospital.org" />
+          </label>
+          <label>
+            내용
+            <textarea rows="5" placeholder="문의 내용을 입력해주세요."></textarea>
+          </label>
+          <button class="button" type="submit">보내기</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
