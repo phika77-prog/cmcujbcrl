@@ -59,21 +59,25 @@
       </section>
 
       <section class="panel panel--split" id="calendar">
-        <div>
+        <div class="calendar-shell">
           <div class="panel__title-row">
             <h2>과제 캘린더</h2>
+            <div class="calendar-nav" aria-label="달력 이동">
+              <button type="button" class="calendar-nav__button" id="prevMonthBtn">‹</button>
+              <div class="calendar-month-label" id="calendarMonthLabel">July 2026</div>
+              <button type="button" class="calendar-nav__button" id="nextMonthBtn">›</button>
+            </div>
           </div>
           <div class="calendar">
-            <div class="calendar__header">July 2026</div>
             <div class="calendar__weekdays">
-              <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+              <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
             </div>
             <div class="calendar__days" id="calendarDays"></div>
           </div>
         </div>
         <aside class="calendar__details" id="calendarDetails">
           <h3>선택된 일정</h3>
-          <p class="calendar__empty">날짜를 선택하면 일정을 확인할 수 있습니다.</p>
+          <p class="calendar__empty">날짜를 선택하면 해당 일정이 표시됩니다.</p>
         </aside>
       </section>
 
