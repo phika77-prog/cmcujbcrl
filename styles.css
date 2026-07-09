@@ -330,6 +330,105 @@ textarea {
   cursor: pointer;
 }
 
+.panel__hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.content-list {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.content-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #f8fbff;
+}
+
+.content-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.content-card__title {
+  font-weight: 700;
+}
+
+.content-card__meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+.content-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.content-card__actions button,
+.content-form button {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.content-card__actions .btn-edit,
+.content-form .btn-submit {
+  background: var(--primary);
+  color: white;
+}
+
+.content-card__actions .btn-delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.content-form {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: white;
+  margin-bottom: 12px;
+}
+
+.content-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.content-form input,
+.content-form textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.content-form__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty-state {
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+}
+
 @media (max-width: 860px) {
   .panel--split,
   .cards--three {

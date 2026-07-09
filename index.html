@@ -28,34 +28,10 @@
       <section class="panel" id="notices">
         <div class="panel__title-row">
           <h2>공지사항</h2>
-          <a href="#">전체보기</a>
+          <span class="panel__hint">브라우저에 저장됩니다</span>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>15</td>
-              <td>연구윤리 교육</td>
-              <td>2026-07-01</td>
-            </tr>
-            <tr>
-              <td>14</td>
-              <td>연구과제 공모</td>
-              <td>2026-06-20</td>
-            </tr>
-            <tr>
-              <td>13</td>
-              <td>연구비 안내</td>
-              <td>2026-06-12</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="content-list" id="noticesList"></div>
+        <div class="content-admin" id="noticesAdmin"></div>
       </section>
 
       <section class="panel panel--split" id="calendar">
@@ -85,83 +61,32 @@
         <div class="panel__title-row">
           <h2>연구업적</h2>
         </div>
-        <div class="cards cards--three">
-          <article class="card">
-            <h3>SCI 논문</h3>
-            <p>Nature</p>
-            <p>2026</p>
-          </article>
-          <article class="card">
-            <h3>연구 논문</h3>
-            <p>Cancer Research</p>
-            <p>2025</p>
-          </article>
-          <article class="card">
-            <h3>연구 논문</h3>
-            <p>Cell</p>
-            <p>2024</p>
-          </article>
-        </div>
+        <div class="content-list" id="achievementsList"></div>
+        <div class="content-admin" id="achievementsAdmin"></div>
       </section>
 
       <section class="panel" id="patents">
         <div class="panel__title-row">
           <h2>특허</h2>
         </div>
-        <div class="patent">
-          <p><strong>등록번호</strong><br />KR2026-000123</p>
-          <p><strong>발명자</strong><br />김연구, 박의사</p>
-          <p><strong>상태</strong><br />등록 완료</p>
-          <a class="button" href="#">PDF 다운로드</a>
-        </div>
+        <div class="content-list" id="patentsList"></div>
+        <div class="content-admin" id="patentsAdmin"></div>
       </section>
 
       <section class="panel" id="equipment">
         <div class="panel__title-row">
           <h2>연구장비</h2>
         </div>
-        <div class="cards cards--three">
-          <article class="card card--image">
-            <h3>Confocal Microscope</h3>
-            <p>사진</p>
-            <a class="button" href="#">예약하기</a>
-            <a class="button button--secondary" href="#">매뉴얼</a>
-            <p class="card__meta">담당자: 박민수</p>
-          </article>
-          <article class="card card--image">
-            <h3>Cell Analyzer</h3>
-            <p>사진</p>
-            <a class="button" href="#">예약하기</a>
-            <a class="button button--secondary" href="#">매뉴얼</a>
-            <p class="card__meta">담당자: 정하은</p>
-          </article>
-          <article class="card card--image">
-            <h3>Incubator</h3>
-            <p>사진</p>
-            <a class="button" href="#">예약하기</a>
-            <a class="button button--secondary" href="#">매뉴얼</a>
-            <p class="card__meta">담당자: 최동현</p>
-          </article>
-        </div>
+        <div class="content-list" id="equipmentList"></div>
+        <div class="content-admin" id="equipmentAdmin"></div>
       </section>
 
       <section class="panel" id="msds">
         <div class="panel__title-row">
           <h2>MSDS</h2>
         </div>
-        <div class="msds">
-          <label class="search-box" for="msdsSearch">
-            <span>검색</span>
-            <input id="msdsSearch" type="text" placeholder="물질명을 입력하세요" />
-          </label>
-          <div class="msds__list">
-            <button class="chip">PLA</button>
-            <button class="chip">ABS</button>
-            <button class="chip">IPA</button>
-            <button class="chip">Ethanol</button>
-          </div>
-          <a class="button" href="#">PDF 다운로드</a>
-        </div>
+        <div class="content-list" id="msdsList"></div>
+        <div class="content-admin" id="msdsAdmin"></div>
       </section>
 
       <section class="panel" id="contact">
@@ -186,6 +111,7 @@
       </section>
     </main>
 
+    <script src="content-data.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
