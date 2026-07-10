@@ -5,6 +5,8 @@ const calendarDetails = document.getElementById('calendarDetails');
 const calendarMonthLabel = document.getElementById('calendarMonthLabel');
 const prevMonthBtn = document.getElementById('prevMonthBtn');
 const nextMonthBtn = document.getElementById('nextMonthBtn');
+const announcementStats = document.getElementById('announcementStats');
+const announcementList = document.getElementById('announcementList');
 
 const eventsByDate = {
   '2026-07-01': [{ title: 'IRB 제출', type: 'deadline' }],
@@ -134,6 +136,88 @@ nextMonthBtn.addEventListener('click', () => {
 });
 
 renderCalendar();
+
+async function loadAnnouncements() {
+  try {
+    const response = await fetch('./widget/announcements.json', { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error('announcement data fetch failed');
+    }
+    const data = await response.json();
+    const announcements = Array.isArray(data.announcements) ? data.announcements : [];
+    renderAnnouncementStats(announcements);
+    renderAnnouncementList(announcements);
+  } catch (error) {
+    if (announcementStats) {
+      announcementStats.innerHTML = '<div class="empty-state">공고 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>';
+    }
+    if (announcementList) {
+      announcementList.innerHTML = '<div class="empty-state">공고 데이터를 불러오지 못했습니다.</div>';
+    }
+  }
+}
+
+function renderAnnouncementStats(announcements) {
+  if (!announcementStats) {
+    return;
+  }
+
+  const grouped = {
+    all: announcements.length,
+    active: announcements.filter((item) => item.status === '접수중').length,
+    urgent: announcements.filter((item) => item.status === '마감임박').length,
+    upcoming: announcements.filter((item) => item.status === '공고예정').length,
+  };
+
+  const cards = [
+    { key: 'all', label: '전체 공고', value: grouped.all },
+    { key: 'active', label: '접수 중', value: grouped.active },
+    { key: 'urgent', label: '마감 임박', value: grouped.urgent },
+    { key: 'upcoming', label: '공고 예정', value: grouped.upcoming },
+  ];
+
+  announcementStats.innerHTML = cards.map((card) => `
+    <button class="announcement-stat" type="button" data-filter="${card.key}">
+      <div class="announcement-stat__label">${card.label}</div>
+      <div class="announcement-stat__value">${card.value}</div>
+    </button>
+  `).join('');
+
+  announcementStats.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+      const filtered = filter === 'all'
+        ? announcements
+        : announcements.filter((item) => {
+            if (filter === 'active') return item.status === '접수중';
+            if (filter === 'urgent') return item.status === '마감임박';
+            return item.status === '공고예정';
+          });
+      renderAnnouncementList(filtered);
+    });
+  });
+}
+
+function renderAnnouncementList(items) {
+  if (!announcementList) {
+    return;
+  }
+
+  if (!items.length) {
+    announcementList.innerHTML = '<div class="empty-state">현재는 공고 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</div>';
+    return;
+  }
+
+  announcementList.innerHTML = items.slice(0, 8).map((item) => `
+    <article class="announcement-item">
+      <div class="announcement-item__title">${item.title || '제목 없음'}</div>
+      <div class="announcement-item__meta">${item.status || '상태 미정'} · ${item.deadline || '기한 미정'} · ${item.dept || item.agency || '기관 미정'}</div>
+      <a class="announcement-item__link" href="${item.url || '#'}" target="_blank" rel="noreferrer">공고문 보기</a>
+    </article>
+  `).join('');
+}
+
+loadAnnouncements();
 
 function getFormFields(section) {
   return contentApi.getSectionConfig(section).fields;
