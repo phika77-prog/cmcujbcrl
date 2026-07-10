@@ -8,19 +8,9 @@ const nextMonthBtn = document.getElementById('nextMonthBtn');
 const announcementStats = document.getElementById('announcementStats');
 const announcementList = document.getElementById('announcementList');
 
-const eventsByDate = {
-  '2026-07-01': [{ title: 'IRB 제출', type: 'deadline' }],
-  '2026-07-08': [{ title: '연구비 신청', type: 'task' }],
-  '2026-07-15': [
-    { title: '중간보고', type: 'task' },
-    { title: '연구윤리 교육', type: 'task' },
-  ],
-  '2026-07-20': [{ title: '논문 검토', type: 'task' }],
-  '2026-07-25': [{ title: '연구과제 공모 마감', type: 'deadline' }],
-  '2026-08-03': [{ title: '장비 예약', type: 'task' }],
-};
-
-let currentDate = new Date(2026, 6, 1);
+let announcementsByDate = {};
+let visibleAnnouncements = [];
+let currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedDate = null;
 
 function formatMonthLabel(date) {
@@ -29,6 +19,78 @@ function formatMonthLabel(date) {
 
 function toDateKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function parseDateValue(value) {
+  if (!value) {
+    return null;
+  }
+
+  const [year, month, day] = value.split('-').map((part) => Number(part));
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return new Date(year, month - 1, day);
+}
+
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function getAnnouncementStatus(item) {
+  const deadline = parseDateValue(item.deadline);
+  const postDate = parseDateValue(item.postDate);
+  const today = startOfDay(new Date());
+
+  if (!deadline) {
+    return null;
+  }
+
+  const deadlineDate = startOfDay(deadline);
+  if (deadlineDate < today) {
+    return null;
+  }
+
+  const oneWeekLater = new Date(today);
+  oneWeekLater.setDate(today.getDate() + 7);
+
+  if (deadlineDate <= oneWeekLater) {
+    return '마감임박';
+  }
+
+  if (!postDate || startOfDay(postDate) <= today) {
+    return '접수중';
+  }
+
+  return '공고예정';
+}
+
+function getVisibleAnnouncements(announcements) {
+  return announcements
+    .map((item) => ({ ...item, status: getAnnouncementStatus(item) }))
+    .filter((item) => item.status)
+    .sort((left, right) => {
+      const leftDate = parseDateValue(left.deadline) || new Date(2100, 0, 1);
+      const rightDate = parseDateValue(right.deadline) || new Date(2100, 0, 1);
+      return leftDate - rightDate;
+    });
+}
+
+function buildAnnouncementsByDate(announcements) {
+  return announcements.reduce((accumulator, item) => {
+    const deadline = parseDateValue(item.deadline);
+    if (!deadline) {
+      return accumulator;
+    }
+
+    const key = toDateKey(deadline);
+    if (!accumulator[key]) {
+      accumulator[key] = [];
+    }
+    accumulator[key].push(item);
+    return accumulator;
+  }, {});
 }
 
 function renderCalendar() {
@@ -72,11 +134,11 @@ function renderCalendar() {
     }
 
     const dateKey = toDateKey(date);
-    const items = eventsByDate[dateKey] || [];
+    const items = announcementsByDate[dateKey] || [];
 
     button.innerHTML = `
       <span class="calendar__day-number">${dayNumber}</span>
-      ${items.slice(0, 2).map((item) => `<span class="calendar__event${item.type === 'deadline' ? ' calendar__event--deadline' : ''}">${item.title}</span>`).join('')}
+      ${items.slice(0, 2).map((item) => `<span class="calendar__event calendar__event--deadline">${item.title}</span>`).join('')}
     `;
 
     button.addEventListener('click', () => {
@@ -89,8 +151,9 @@ function renderCalendar() {
     calendarDays.appendChild(button);
   }
 
-  if (!selectedDate) {
-    selectedDate = toDateKey(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1));
+  if (!selectedDate || !announcementsByDate[selectedDate]) {
+    const fallbackDate = toDateKey(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1));
+    selectedDate = announcementsByDate[fallbackDate] ? fallbackDate : Object.keys(announcementsByDate)[0] || fallbackDate;
   }
   renderDetails(selectedDate);
 }
@@ -98,7 +161,7 @@ function renderCalendar() {
 function renderDetails(dateKey) {
   const date = new Date(dateKey);
   const label = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-  const items = eventsByDate[label] || [];
+  const items = announcementsByDate[label] || [];
 
   const heading = document.createElement('h3');
   heading.textContent = `${date.getMonth() + 1}월 ${date.getDate()}일 일정`;
@@ -107,14 +170,14 @@ function renderDetails(dateKey) {
   detailList.className = 'calendar__detail-list';
 
   if (items.length === 0) {
-    detailList.innerHTML = '<p class="calendar__empty">해당 날짜에는 등록된 일정이 없습니다.</p>';
+    detailList.innerHTML = '<p class="calendar__empty">해당 날짜에는 표시할 공고가 없습니다.</p>';
   } else {
     items.forEach((item) => {
       const detailItem = document.createElement('div');
       detailItem.className = 'calendar__detail-item';
       detailItem.innerHTML = `
         <strong>${item.title}</strong>
-        <small>${item.type === 'deadline' ? '마감 일정' : '진행 일정'}</small>
+        <small>${item.status || '접수 가능'} · ${item.deadline || '기한 미정'} · ${item.dept || item.agency || '기관 미정'}</small>
       `;
       detailList.appendChild(detailItem);
     });
@@ -145,8 +208,11 @@ async function loadAnnouncements() {
     }
     const data = await response.json();
     const announcements = Array.isArray(data.announcements) ? data.announcements : [];
-    renderAnnouncementStats(announcements);
-    renderAnnouncementList(announcements);
+    visibleAnnouncements = getVisibleAnnouncements(announcements);
+    announcementsByDate = buildAnnouncementsByDate(visibleAnnouncements);
+    renderCalendar();
+    renderAnnouncementStats(visibleAnnouncements);
+    renderAnnouncementList(visibleAnnouncements);
   } catch (error) {
     if (announcementStats) {
       announcementStats.innerHTML = '<div class="empty-state">공고 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</div>';
@@ -204,14 +270,14 @@ function renderAnnouncementList(items) {
   }
 
   if (!items.length) {
-    announcementList.innerHTML = '<div class="empty-state">현재는 공고 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</div>';
+    announcementList.innerHTML = '<div class="empty-state">현재 표시할 공고가 없습니다.</div>';
     return;
   }
 
   announcementList.innerHTML = items.slice(0, 8).map((item) => `
     <article class="announcement-item">
       <div class="announcement-item__title">${item.title || '제목 없음'}</div>
-      <div class="announcement-item__meta">${item.status || '상태 미정'} · ${item.deadline || '기한 미정'} · ${item.dept || item.agency || '기관 미정'}</div>
+      <div class="announcement-item__meta">${item.status || '접수 가능'} · ${item.deadline || '기한 미정'} · ${item.dept || item.agency || '기관 미정'}</div>
       <a class="announcement-item__link" href="${item.url || '#'}" target="_blank" rel="noreferrer">공고문 보기</a>
     </article>
   `).join('');
